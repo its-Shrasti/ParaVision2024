@@ -1,0 +1,428 @@
+---
+title: ""
+output:
+  html_document:
+    fontfamily: "Times New Roman"
+    fontsize: 14px
+    css: styles.css
+  pdf_document:
+    latex_engine: xelatex
+    fontsize: 12pt
+editor: visual
+---
+
+::: {style="text-align:center; font-size: 22px; font-weight: bold;"}
+**PARALYMPICS 2024**
+:::
+
+::: {style="text-align: center; font-size: 18px; font-weight: bold; margin-top: 20px;"}
+**MTH-208 COURSE PROJECT REPORT**
+
+**GROUP 13**
+:::
+
+::: {style="text-align: center; font-size: 16px; font-weight: bold; margin-top: 10px;"}
+**INSTRUCTOR: DR. DOOTIKA VATS**
+:::
+
+::: {style="text-align: center; font-size: 16px; font-weight: bold; margin-top: 10px;"}
+**Group Members: KHUSHI LEKHWAR, SHRASTI DWIVEDI, LIPIKA BAGAI ,MAHESH PATEL**
+:::
+
+------------------------------------------------------------------------
+
+## Table of Contents
+
+-   Acknowledgment
+
+-   Introduction
+
+-   Data Description
+
+-   Data Extraction and Cleaning
+
+-   Biases
+
+-   Visualizations
+
+-   Conclusion
+
+-   References
+
+## Acknowledgment
+
+We, the students of group - 13 would like to express our profound gratitude towards **Dr. Dootika Vats**, our academic and project instructor for MTH208 (Data Science Lab I), for her guidance and constant supervision throughout the process and providing creative ideas and necessary information regarding the project which led to the completion of this project.
+
+It has been a great learning experience and has also provided us with a practical insight of the theoretical knowledge gathered during the course lecture.
+
+## Introduction:
+
+This project seeks to analyze the dataset on Paralympic athletes and their medal achievements, with the ultimate goal of creating a Shiny App to visualize and explore the various factors, including GDP of a country and gender participation, that influence the performance of a country in the Paralympics. The dataset encompasses athlete demographics, event categories, gender participation and medal counts for the Paralympics 2024, allowing for an in-depth analysis of trends and performance across the different countries, sports and etc.
+
+This report highlights the data preparation, analysis and plots, as well as the insights gained about trends in Paralympics achievements across nations.
+
+## A. Data Description
+
+Our app consists of the following datasets saved in RData files:
+
+**1.Paralympics total Medal Tally** :
+
+It consists of an all-time medal table for all Summer Paralympic Games from 1960 to 2024 and medals of countries in Paralympics.
+
+-   **Source**: The dataset was majorly scraped from the Wikipedia Page of 2024 Paralympics Medal Tally\[[1.](https://en.wikipedia.org/wiki/All-time_Paralympic_Games_medal_table)\] .
+
+-   **Observations**: The all time medal wise performance of each country was observed.
+
+-   **Variables**:
+
+    | Variable name                |                                               Description |
+    |:-----------------------------|----------------------------------------------------------:|
+    | Country                      |                                              Country name |
+    | Number_of_games_participated | Total no. of games participated a country participated in |
+    | Gold                         |                                  Count of Gold medals won |
+    | Silver                       |                                Count of Silver medals won |
+    | Bronze                       |                                Count of Bronze medals won |
+    | Total                        |                                 Count of Total medals won |
+
+**2.Countries.RData** :
+
+It consists of a participation of gender v/s sports table for top 16 countries that participated in Summer Paralympic Games 2024 and another table of medals v/s sports of the same countries in Paralympics.
+
+-   **Source**: The dataset was majorly scraped from the Wikipedia Page of each country of 2024 Paralympics Medal[\[2\]](https://en.wikipedia.org/wiki/India_at_the_2024_Summer_Paralympics).
+
+-   **Observations**: The sport v/s gender-wise participation and sports v/s medal wise performance of each country was observed.
+
+-   **Variables**:
+
+    This data frame consisted of a table of 2 tables of a table i.e each country in the top 16 had 2 tables in it with the following variable names.
+
+    | Variable name |                                   Description |
+    |:--------------|----------------------------------------------:|
+    | Sport         |                                    Sport name |
+    | Men           |   No. of males that participated from a sport |
+    | Women         | No. of females that participated from a sport |
+    | Total         |       Total no. of participants in each sport |
+
+The second table consisted of the following variables:
+
+| Variable name |                            Description |
+|:--------------|---------------------------------------:|
+| Sport         |                             Sport name |
+| Gold          |      No. of gold medals won in a sport |
+| Silver        |    No. of silver medals won in a sport |
+| Bronze        | No. of bronze medals won in each sport |
+
+**3.Top80medaltally :**
+
+It consists of the gender wise medal tally of Top 80 country that participated in Paralympics 2024
+
+-   **Source**: The dataset was majorly sourced from a csv file obtained from the web[\[3\]](https://womeninsport.org/wp-content/uploads/2024/09/Paris-Paralympic-2024-medal-table-3.pdf).
+
+-   **Observations**: The gender-wise and medal wise performance of each country was observed.
+
+-   **Variables**:
+
+    This data frame consisted of a table with the following variable names:
+
+    | Variable |                                Description |
+    |----------|-------------------------------------------:|
+    | Country  |                               Country Name |
+    | G_Female |         Count of gold medals won by female |
+    | G_Male   |           Count of gold medals won by male |
+    | G_Mixed  |   Count of gold medals won in mixed sports |
+    | S_Female |       Count of silver medals won by female |
+    | S_Male   |         Count of silver medals won by male |
+    | S_Mixed  | Count of silver medals won in mixed sports |
+    | B_Female |       Count of bronze medals won by female |
+    | B_Male   |         Count of bronze medals won by male |
+    | B_Mixed  | Count of bronze medals won in mixed sports |
+    | T_Female |           Count of total female medals won |
+    | T_Male   |             Count of total male medals won |
+    | T_Mixed  |            Count of total mixed medals won |
+    | T_Gold   |             Count of total gold medals won |
+    | T_Silver |           Count of total silver medals won |
+    | T_Bronze |           Count of total bronze medals won |
+    | Total    |                  Count of total medals won |
+
+**4. GDP:**
+
+It consists of the GDP (Gross Domestic Product) of each country measured in millions in 2022.
+
+-   **Source**: The dataset was majorly sourced from the worldometer website[\[4\]](https://www.worldometers.info/gdp/gdp-by-country/).
+
+-   **Observations**: The GDP of each country was observed.
+
+## B. Obtaining the Data
+
+### Data Collection
+
+-   **Web Scraping**: The data was majorly scraped from website using R's packages such as rvest, dplyr and tidy verse.
+
+-   **CSV Data**: The Paris-Paralympic-medal-table-2024.csv was obtained from the women in sport website.It was downloaded in pdf and then converted to csv using csv to pdf converter.
+
+-   **Steps**: The obtained data was then cleaned in ways such as changing data type from string to numeric for better handling, which was all done in R.
+
+    From the medal tally, only top 80 country were chosen because all the others had 0 medals and didn't contribute to the plots/analysis.
+
+    Also, since on Wikipedia not all sites had country wise sports v/s participation tally and that is why only the Top 16 could be taken up.
+
+## **C.Identifying any biases in the data.**
+
+Since the data was obtained from official sources, data collection bias appears minimal.But there may be bias in other forms such as the dataset primarily focuses on the top 16 or 80 countries, which could exclude smaller or less developed countries, potentially skewing results in favor of wealthier or more well-established nations with greater resources for athlete participation and training.
+
+Additionally, there may be biases in gender representation, especially in sports where certain genders dominate. While the data presents male and female medal counts, it might not fully account for the accessibility and opportunities available to athletes based on gender.
+
+Also, the dataset primarily covers athletes that participated in the 2024 Paralympics, but it may not include information on athletes who were unable to participate due to a lack of support, resources, or opportunities, particularly in low-income countries.
+
+## D.Interesting Questions to ask from the data
+
+Specifically, in the analysis tried to address the following key questions:
+
+**1. Athlete Participation and Country Performance:** What is the level of athlete participation across different countries, and how does each country's performance compare in terms of total medals won?
+
+**2. Gender-Based Performance Comparison:** How does gender influence performance across different countries? By calculating the performance ratio (number of medals won per participant) for each gender and examining its correlation with each country’s GDP, this project explored if economic factors contribute to gender-based performance differences.
+
+**3.Gender and Medal Participation:** Is there a significant correlation between the gender of athletes and the type of medal they won across different countries ?
+
+## E.Important Visualisations
+
+The app is divided into three main tabs, providing unique visualizations and insights into our data:
+
+#### Participation By Gender:
+
+This tab provides insights into the participation of male and female athletes in various sports for a selected country , using bar plots visualizations in the main panel. It also includes heatmap that visualizes the **distribution of medals** across different sports and medal types (Gold, Silver, Bronze) for a selected country.
+
+The bar plot effectively illustrates the number of male and female athletes participating in each sport , making it easier to compare gender representation at a glance.
+
+```{r}
+#| echo: false
+load("Countries.RData")
+print(countries_dataset$China)
+```
+
+As is clear from the figures that a total of 126 men and 158 women participated across various sports, indicating a higher participation rate among female athletes in China.
+
+**Athletics** and **Swimming** have the highest total participation, with **Athletics** showing a higher number of women (31) compared to men(20).
+
+**Sitting Volleyball** and **Wheelchair Basketball** have no male participation suggesting the men are less likely to participate in the sport in China.
+
+**Boccia**, **Paracanoeing**, **Judo** and **Taekwondo** have the lowest overall participation, with fewer than 8 athletes in total for each indicating the sports are less popular among athletes.
+
+```{r}
+load("Countries.Rdata")
+countries_dataset[[1]][[2]]
+library(ggplot2)
+library(tidyverse)
+dat = countries_dataset[[1]][[2]]
+# Reshape the data to long format
+dat_long <- dat %>%
+  pivot_longer(cols = c(Men, Women), names_to = "gender", values_to = "participation")
+dat_long <- dat_long %>% slice(1:(n() - 2))
+# View the reshaped data
+print(dat_long)
+ggplot(dat_long, aes(x = Sport, y = participation, fill = gender)) +
+  geom_bar(stat = "identity", position = "dodge", width = 0.6) +
+  labs(x = "Sport", y = "Total Participation", title = "Participation in Sports by Gender") +
+  theme(axis.text.x = element_text(angle=90, vjust=0.6))
+```
+
+The heatmap provides an at-a glance view of which sport yields the most medals and the type of medals won by the selected country. By using color intensity , the heatmap highlights the following:
+
+1.**Sports with higher or lower medal counts:** Darker colors represent higher medal counts, while lighter colors indicate fewer medals.
+
+2.**Medal type breakdown:** Rows represent different sports, and columns represent medal types (Gold, Silver and Bronze), allowing users to see the distribution across each category.
+
+Given below is the medal tally for China. As is clear from the figures that Swimming is the sport wherein China won highest number of medals.
+
+```{r}
+#| echo: false
+load("Countries.RData")
+print(countries_dataset$China$df1)
+```
+
+Heatmap visualization makes it even easier to make this observation.
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+load("Countries.RData")
+library(tidyverse)
+heatmap <- function(data) # pass df1 of each country
+{
+   data <- subset(data, Sport!="Total" )
+   medal_heatmap <- data %>%
+    select(Sport, Gold, Silver, Bronze) %>%
+    pivot_longer(cols = c(Gold, Silver, Bronze), names_to = "Medal", values_to = "Count")
+  
+  # Heatmap plot
+  ggplot(medal_heatmap, aes(x = Medal, y = Sport, fill = Count)) +
+    geom_tile(color = "white") +
+    scale_fill_gradient(low = "lightyellow", high = "darkorange") +
+    labs(
+      title = "Medal Count by Sport and Medal Type",
+      x = "Medal Type",
+      y = "Sport",
+      fill = "Medal Count"
+    ) +
+    theme_minimal()
+}
+
+heatmap(countries_dataset$China$df1)
+```
+
+**World Map and GDP Analysis**
+
+In this section, the medal/participation ratio was plotted against GDP of different countries worldwide among the Top16 countries and whoever had more medals that gender's bubble plot was plotted.
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+library(ggplot2)
+library(rnaturalearth)
+library(sf)
+library(dplyr)
+library(viridis)
+
+# Load necessary data
+load("GDP.Rdata")
+load("Gender-wise Para 2024.Rdata")
+load("Countries.Rdata")
+
+
+# Standardize country names for consistency
+standardize_country_name <- function(name) {
+  name <- gsub(" ", "_", name) 
+  if (name == "France_(host)") return("France")
+  return(name)
+}
+
+GDP_data$Country <- sapply(GDP_data$Country, standardize_country_name)
+medal_table$Country <- sapply(medal_table$Country, standardize_country_name)
+
+# Calculate gender performance data (medal-to-participant ratio)
+gender_performance <- lapply(1:16, function(i) {
+  country_data <- countries_dataset[[i]][[2]]
+  country <- standardize_country_name(names(countries_dataset)[i])
+  
+  total_male_participants <- as.numeric(country_data$Men[nrow(country_data)])
+  total_female_participants <- as.numeric(country_data$Women[nrow(country_data)])
+  
+  total_male_medals <- as.numeric(medal_table$T_Male[medal_table$Country == country])
+  total_female_medals <- as.numeric(medal_table$T_Female[medal_table$Country == country])
+  
+  male_ratio <- ifelse(!is.na(total_male_participants) && total_male_participants > 0, 
+                       total_male_medals / total_male_participants, NA)
+  female_ratio <- ifelse(!is.na(total_female_participants) && total_female_participants > 0, 
+                         total_female_medals / total_female_participants, NA)
+  
+  if (!is.na(male_ratio) && !is.na(female_ratio)) {
+    performance <- ifelse(male_ratio > female_ratio, "Male", "Female")
+    ratio <- max(male_ratio, female_ratio, na.rm = TRUE)
+  } else if (!is.na(male_ratio)) {
+    performance <- "Male"
+    ratio <- male_ratio
+  } else if (!is.na(female_ratio)) {
+    performance <- "Female"
+    ratio <- female_ratio
+  } else {
+    performance <- NA
+    ratio <- NA
+  }
+  
+  data.frame(Country = names(countries_dataset)[i], Performance = performance, Ratio = ratio)
+}) %>% bind_rows()
+
+world <- ne_countries(scale = "medium", returnclass = "sf")
+world$name[world$name == "United States of America"] <- "United States"
+world$name <- sapply(world$name, standardize_country_name)
+
+# Merge GDP and gender performance data with the world map
+world <- world %>%
+  left_join(GDP_data, by = c("name" = "Country")) %>%
+  left_join(gender_performance, by = c("name" = "Country"))
+
+# Handle missing GDP data by replacing NA values with the mean GDP
+mean_gdp <- mean(world$GDP_per_billion, na.rm = TRUE)
+world$GDP_per_billion[is.na(world$GDP_per_billion)] <- mean_gdp
+
+# Calculate centroids for country locations
+world_centroids <- st_centroid(world)
+world_centroids <- cbind(world_centroids, st_coordinates(world_centroids))
+
+world$GDP_per_billion <- as.numeric(world$GDP_per_billion)
+
+# Plot the map with GDP as fill and medals as points based on performance ratio   
+ggplot(data = world) +
+  geom_sf(aes(fill = GDP_per_billion), color = "black") +
+  scale_fill_viridis_c(option = "C", na.value = "gray90") +
+  labs(title = "World Map by GDP with Gender-Based Performance in Paralympics",
+       fill = "GDP (in billions)") +
+  theme_minimal() +
+  geom_point(data = world_centroids, aes(x = X, y = Y, color = Performance, size = Ratio), 
+             alpha = 0.9) +
+  scale_color_manual(values = c("Male" = "green", "Female" = "pink")) +
+  scale_size_continuous(name = "Performance Ratio", range = c(1, 10)) +
+  theme(legend.position = "right", 
+        plot.title = element_text(hjust = 0.5,size=12),
+        legend.title = element_text(size = 8), 
+        legend.text = element_text(size = 8))
+
+```
+
+From the plot , it could easily be inferred that in high GDP country "Performance Ratio" of females was better ,i.e female para-athletes performed better which can be due to them getting better resources in these countries.
+
+#### Countries Comparison
+
+Here , all the countries were compared against each other in terms of medal tally and participation.
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+load('Countries.Rdata')
+countries <- countries_dataset
+library(ggplot2)
+j=1
+# Total medals by country
+Country <- c()
+total_medals <- c()
+total_participation <- c()
+for (i in names(countries)) {
+  Country[j] <- i
+  total_medals[j] <- countries[[i]][[1]][nrow(countries[[i]][[1]]), ncol(countries[[i]][[1]])]
+  total_participation[j] <- countries[[i]][[2]][nrow(countries[[i]][[2]]), ncol(countries[[i]][[2]])]
+  j=j+1
+}
+total_participation[6]<-162
+plot_data <- data.frame(Country, total_medals, as.numeric(total_participation))
+
+ggplot(plot_data, aes(x = as.numeric(total_participation), y = total_medals, label = Country)) +
+  geom_line(color = "blue", size = 1) +
+  geom_text(vjust = -0.5, hjust = 0.5, size = 3) +
+  labs(title = "Total Medals vs. Total Participation for Each Country",
+       x = "Total Participation",
+       y = "Total Medals") +
+  theme_minimal()
+```
+
+The correlation found for this data was 0.84 between total participation and total medals.
+
+## F.Final Conclusions
+
+While it may seem that women might not participate more than men(overall) in sports but when they do, their performance ratio(medal/participation) was higher a lot of times depicting that when invested in them such as done in high-GDP countries, they could reap great results.
+
+Another inference was the participation v/s medal count , it seemed that no. of participants and no. of medals had direct correlation.While this could be not always be right too because it was only the best athletes participate from a country and also due to the limitation of dataset here (i.e. a small dataset )of 16 high performing countries.
+
+## G.References
+
+1.<https://en.wikipedia.org/wiki/All-time_Paralympic_Games_medal_table>
+
+2.<https://en.wikipedia.org/wiki/India_at_the_2024_Summer_Paralympics>
+
+3.<https://womeninsport.org/wp-content/uploads/2024/09/Paris-Paralympic-2024-medal-table-3.pdf>
+
+4.<https://www.worldometers.info/gdp/gdp-by-country/>
+
+5\. R Help Tab and libraries
